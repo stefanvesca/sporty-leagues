@@ -18,10 +18,7 @@ onMounted(() => {
 
 <template>
   <AppHeader />
-  <main class="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-6 sm:px-6">
-    <h1 class="type-display text-2xl font-extrabold uppercase sm:text-3xl">
-      Sports leagues
-    </h1>
+  <main class="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-5 sm:px-6">
     <FilterToolbar />
     <DemoDataNotice />
     <LeagueList />

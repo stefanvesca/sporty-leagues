@@ -1,35 +1,39 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
-@import '@fontsource-variable/archivo/wdth.css';
 
 /*
- * Theme tokens — dark is the default (Sporty's identity), `.light` on <html>
- * flips the semantic layer. Brand values never change between themes.
+ * Theme tokens — light is the default, matching SportyTV's product UI
+ * (sampled from sportytv: header #eb4f56, subnav #363a44, page #f2f3f5,
+ * sunken panels #ebecef). `.dark` on <html> flips the semantic layer;
+ * brand values never change between themes.
  */
 :root {
+  --bg: #f2f3f5;
+  --surface: #ffffff;
+  --surface-sunken: #ebecef;
+  --surface-raised: #fafafa;
+  --line: #e6e7ea;
+  --ink: #26292f;
+  --ink-muted: #757c8a;
+  --brand-contrast: #ffffff;
+}
+
+:root.dark {
   --bg: #0d0f12;
   --surface: #16181d;
+  --surface-sunken: #22252c;
   --surface-raised: #1d2026;
   --line: #2b2f37;
   --ink: #fafafa;
   --ink-muted: #9ca0ab;
-  --brand-contrast: #ffffff;
-}
-
-:root.light {
-  --bg: #f6f6f7;
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
-  --line: #e2e3e6;
-  --ink: #16181d;
-  --ink-muted: #6b7280;
 }
 
 @theme {
   --color-brand: #e41827;
-  --color-brand-hover: #ff3c4f;
+  --color-brand-hover: #eb4f56;
+  --color-header: #eb4f56;
+  --color-subnav: #363a44;
 
-  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
 
   --radius-card: 0.625rem;
@@ -38,6 +42,7 @@
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
   --color-surface-raised: var(--surface-raised);
   --color-line: var(--line);
   --color-ink: var(--ink);
@@ -47,22 +52,16 @@
 
 @layer base {
   html {
-    color-scheme: dark;
-  }
-  html.light {
     color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
   }
   body {
     @apply bg-bg text-ink font-sans antialiased;
   }
-  /* Condensed scoreboard voice for headings and league names */
-  .type-display {
-    font-family: var(--font-display);
-    font-variation-settings: 'wdth' 78;
-    letter-spacing: 0.01em;
-  }
   :focus-visible {
-    outline: 2px solid var(--color-brand-hover);
+    outline: 2px solid var(--color-brand);
     outline-offset: 2px;
   }
   @media (prefers-reduced-motion: reduce) {

@@ -13,24 +13,21 @@ defineEmits<{
 </script>
 
 <template>
-  <article
-    class="overflow-hidden rounded-card border border-line bg-surface transition-colors"
-    :class="expanded ? 'border-brand' : 'hover:border-ink-muted/50'"
-  >
+  <article>
     <button
       type="button"
-      class="group flex w-full items-center gap-3 px-4 py-3 text-left"
+      class="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-raised"
       :aria-expanded="expanded"
       @click="$emit('toggle')"
     >
-      <!-- Signature red rule: grows on hover, locks in when expanded -->
+      <!-- Signature red rule: appears on hover, locks in when expanded -->
       <span
         aria-hidden="true"
-        class="w-0.5 self-stretch rounded-full transition-all"
-        :class="expanded ? 'bg-brand' : 'bg-line group-hover:bg-brand-hover'"
+        class="w-0.5 self-stretch rounded-full transition-colors"
+        :class="expanded ? 'bg-brand' : 'bg-transparent group-hover:bg-brand-hover'"
       />
       <span class="min-w-0 flex-1">
-        <span class="type-display block text-base font-bold uppercase leading-snug">
+        <span class="block text-[15px] font-semibold leading-snug">
           {{ league.strLeague }}
         </span>
         <span class="mt-0.5 block text-xs text-ink-muted">

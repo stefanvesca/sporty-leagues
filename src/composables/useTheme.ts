@@ -1,15 +1,15 @@
 import { ref } from 'vue'
 
-export type Theme = 'dark' | 'light'
+export type Theme = 'light' | 'dark'
 
 const STORAGE_KEY = 'sporty-theme'
 
-// Dark is the brand default; module-level so every caller shares one state.
-const theme = ref<Theme>('dark')
+// Light is the SportyTV product default; module-level so every caller shares one state.
+const theme = ref<Theme>('light')
 
 function apply(next: Theme): void {
   theme.value = next
-  document.documentElement.classList.toggle('light', next === 'light')
+  document.documentElement.classList.toggle('dark', next === 'dark')
   try {
     localStorage.setItem(STORAGE_KEY, next)
   } catch {
@@ -20,7 +20,7 @@ function apply(next: Theme): void {
 export function useTheme() {
   return {
     theme,
-    toggleTheme: () => apply(theme.value === 'dark' ? 'light' : 'dark'),
+    toggleTheme: () => apply(theme.value === 'light' ? 'dark' : 'light'),
     initTheme: () => {
       let saved: string | null = null
       try {
@@ -28,7 +28,7 @@ export function useTheme() {
       } catch {
         /* ignore */
       }
-      apply(saved === 'light' ? 'light' : 'dark')
+      apply(saved === 'dark' ? 'dark' : 'light')
     },
   }
 }

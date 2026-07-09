@@ -31,14 +31,14 @@ watch(() => props.leagueId, load, { immediate: true })
 </script>
 
 <template>
-  <div class="flex min-h-28 items-center justify-center gap-4 border-t border-line px-4 py-4">
+  <div class="flex min-h-28 items-center justify-center gap-4 border-t border-line bg-surface-raised px-4 py-4">
     <template v-if="status === 'loading'">
       <div
-        class="h-20 w-20 animate-pulse rounded-lg bg-surface-raised"
+        class="h-20 w-20 animate-pulse rounded-lg bg-surface-sunken"
         aria-hidden="true"
       />
       <div
-        class="h-4 w-24 animate-pulse rounded bg-surface-raised"
+        class="h-4 w-24 animate-pulse rounded bg-surface-sunken"
         aria-hidden="true"
       />
       <span class="sr-only">Loading season badge…</span>
@@ -52,7 +52,7 @@ watch(() => props.leagueId, load, { immediate: true })
         loading="lazy"
       >
       <div>
-        <p class="type-display text-lg font-bold uppercase">
+        <p class="text-lg font-bold">
           {{ badge.strSeason }}
         </p>
         <p class="text-xs text-ink-muted">

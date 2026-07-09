@@ -22,7 +22,8 @@ No configuration is required — the app ships with TheSportsDB's public test ke
 - Sport dropdown, derived from the actual data rather than hardcoded
 - Clicking a league expands the card in place and loads a season badge via the Season Badge API
 - Every API response is cached (see below) — repeat clicks and reloads fire no duplicate requests
-- Responsive layout, dark theme by default with a light-mode toggle, loading skeletons, and explicit empty/error states with retry
+- Responsive layout, light theme by default (matching SportyTV) with a dark-mode toggle, loading skeletons, and explicit empty/error states with retry
+- Sport tabs in the header (SportyTV-style) drive the same filter state as the required dropdown
 
 ## A note on the API's free tier
 
@@ -73,7 +74,7 @@ Both the league list and each badge lookup go through it. Failures are never cac
 
 ## Design
 
-Colors and logo are drawn from sporty.com's visual identity: brand red `#E41827` (hover `#FF3C4F`) on dark ink surfaces, dark theme as default. League names are set in Archivo with a narrowed width axis — a nod to scoreboard typography — while UI text is Inter. Fonts are self-hosted via Fontsource so the project runs fully offline. The one deliberate flourish is the red rule on each card that answers hover and locks in when a league is expanded; everything else stays quiet.
+The UI mirrors SportyTV's actual product language, with colors sampled from the live site: the red app bar (`#eb4f56`) carrying the logo and a scrollable sport-tab rail, the charcoal subnav (`#363a44`) holding the section title and live result count, and content as white panels with `#ebecef` section headers and hairline-divided rows on a `#f2f3f5` page. Brand red `#E41827` marks primary actions. Light theme is the default, as in the product; a dark theme is one toggle away and swaps only the semantic token layer. Type is Inter throughout, self-hosted via Fontsource so the project runs fully offline. The one flourish of our own is the red rule on each row that answers hover and locks in when a league is expanded; everything else defers to Sporty's language.
 
 Accessibility floor: semantic buttons with `aria-expanded`, visible focus rings, `role="status"` on the result count, `prefers-reduced-motion` respected, and the layout holds down to 360 px.
 

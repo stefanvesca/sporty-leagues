@@ -25,14 +25,20 @@ watch(filteredLeagues, (leagues) => {
   <!-- Loading skeletons -->
   <div
     v-if="status === 'loading' || status === 'idle'"
-    class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+    class="overflow-hidden rounded-card border border-line bg-surface"
     aria-busy="true"
   >
-    <div
-      v-for="n in 9"
-      :key="n"
-      class="h-16 animate-pulse rounded-card border border-line bg-surface"
-    />
+    <div class="h-10 animate-pulse bg-surface-sunken" />
+    <div class="divide-y divide-line">
+      <div
+        v-for="n in 8"
+        :key="n"
+        class="flex flex-col justify-center gap-2 px-4 py-3.5"
+      >
+        <div class="h-3.5 w-1/3 animate-pulse rounded bg-surface-sunken" />
+        <div class="h-2.5 w-1/4 animate-pulse rounded bg-surface-sunken" />
+      </div>
+    </div>
     <span class="sr-only">Loading leagues…</span>
   </div>
 
@@ -41,7 +47,7 @@ watch(filteredLeagues, (leagues) => {
     v-else-if="status === 'error'"
     class="rounded-card border border-line bg-surface px-6 py-10 text-center"
   >
-    <p class="type-display text-lg font-bold uppercase">
+    <p class="text-base font-bold">
       Couldn't load leagues
     </p>
     <p class="mt-1 text-sm text-ink-muted">
@@ -61,7 +67,7 @@ watch(filteredLeagues, (leagues) => {
     v-else-if="filteredLeagues.length === 0"
     class="rounded-card border border-line bg-surface px-6 py-10 text-center"
   >
-    <p class="type-display text-lg font-bold uppercase">
+    <p class="text-base font-bold">
       No leagues match
     </p>
     <p class="mt-1 text-sm text-ink-muted">
@@ -75,24 +81,34 @@ watch(filteredLeagues, (leagues) => {
     <button
       v-if="searchTerm || selectedSport"
       type="button"
-      class="mt-4 rounded-md border border-line px-4 py-2 text-sm text-ink transition-colors hover:border-brand-hover"
+      class="mt-4 rounded-md border border-line px-4 py-2 text-sm transition-colors hover:border-brand-hover"
       @click="store.clearFilters()"
     >
       Clear filters
     </button>
   </div>
 
-  <!-- Results -->
-  <div
+  <!-- Results: single panel with divided rows, like sportytv's league sections -->
+  <section
     v-else
-    class="grid items-start gap-3 sm:grid-cols-2 lg:grid-cols-3"
+    class="overflow-hidden rounded-card border border-line bg-surface"
   >
-    <LeagueCard
-      v-for="league in filteredLeagues"
-      :key="league.idLeague"
-      :league="league"
-      :expanded="expandedId === league.idLeague"
-      @toggle="toggle(league.idLeague)"
-    />
-  </div>
+    <header class="flex items-center justify-between bg-surface-sunken px-4 py-2.5">
+      <h2 class="text-sm font-bold">
+        {{ selectedSport || 'All sports' }}
+      </h2>
+    </header>
+    <ul class="divide-y divide-line">
+      <li
+        v-for="league in filteredLeagues"
+        :key="league.idLeague"
+      >
+        <LeagueCard
+          :league="league"
+          :expanded="expandedId === league.idLeague"
+          @toggle="toggle(league.idLeague)"
+        />
+      </li>
+    </ul>
+  </section>
 </template>
