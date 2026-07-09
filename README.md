@@ -2,7 +2,7 @@
 
 A single-page app that lists sports leagues from [TheSportsDB](https://www.thesportsdb.com/free_sports_api), with name search, a sport filter, and click-to-reveal season badges. Built for the Sporty frontend home assignment.
 
-**Live demo:** _link added after deployment_
+**Live demo:** https://stefanvesca.github.io/sporty-leagues/
 
 ## Run it
 
