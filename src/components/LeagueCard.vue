@@ -30,7 +30,7 @@ defineEmits<{
         :class="expanded ? 'bg-brand' : 'bg-line group-hover:bg-brand-hover'"
       />
       <span class="min-w-0 flex-1">
-        <span class="type-display block truncate text-base font-bold uppercase leading-snug">
+        <span class="type-display block text-base font-bold uppercase leading-snug">
           {{ league.strLeague }}
         </span>
         <span class="mt-0.5 block text-xs text-ink-muted">
