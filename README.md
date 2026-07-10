@@ -76,7 +76,7 @@ Both the league list and each badge lookup go through it. Failures are never cac
 
 The UI mirrors SportyTV's actual product language, with colors sampled from the live site: the red app bar (`#eb4f56`) carrying the logo and a scrollable sport-tab rail, the charcoal subnav (`#363a44`) holding the section title and live result count, and content as white panels with `#ebecef` section headers and hairline-divided rows on a `#f2f3f5` page. Brand red `#E41827` marks primary actions. Light theme is the default, as in the product; a dark theme is one toggle away and swaps only the semantic token layer. Type is Inter throughout, self-hosted via Fontsource so the project runs fully offline. The one flourish of our own is the red rule on each row that answers hover and locks in when a league is expanded; everything else defers to Sporty's language.
 
-Accessibility floor: semantic buttons with `aria-expanded`, visible focus rings, `role="status"` on the result count, `prefers-reduced-motion` respected, and the layout holds down to 360 px.
+Accessibility floor: semantic buttons with `aria-expanded`, visible focus rings, `role="status"` on the result count, `prefers-reduced-motion` respected, WCAG AA contrast throughout (the app bar uses the logo red `#e41827` rather than the lighter product red, which can't carry AA-compliant white text), and the layout holds down to 360 px. Lighthouse (mobile, against the live deployment): **99 performance · 100 accessibility · 100 best practices · 100 SEO**.
 
 ## Time spent
 
