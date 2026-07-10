@@ -14,7 +14,7 @@
   --surface-raised: #fafafa;
   --line: #e6e7ea;
   --ink: #26292f;
-  --ink-muted: #757c8a;
+  --ink-muted: #5f6672; /* darkest "muted" that clears WCAG AA on all surfaces */
   --brand-contrast: #ffffff;
 }
 
@@ -31,7 +31,8 @@
 @theme {
   --color-brand: #e41827;
   --color-brand-hover: #eb4f56;
-  --color-header: #eb4f56;
+  /* Logo red, not the lighter sampled #eb4f56 — white text passes AA on this one */
+  --color-header: #e41827;
   --color-subnav: #363a44;
 
   --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;

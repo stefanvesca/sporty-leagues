@@ -30,7 +30,7 @@ const { theme, toggleTheme } = useTheme()
             >
               <button
                 type="button"
-                class="whitespace-nowrap px-3 py-4 text-sm text-white/85 transition-colors hover:text-white"
+                class="whitespace-nowrap px-3 py-4 text-sm text-white transition-[font-weight,box-shadow] hover:shadow-[inset_0_-3px_0_0_rgba(255,255,255,0.5)]"
                 :class="{ 'font-bold text-white shadow-[inset_0_-3px_0_0_white]': selectedSport === sport }"
                 :aria-pressed="selectedSport === sport"
                 @click="selectedSport = sport"
@@ -42,7 +42,7 @@ const { theme, toggleTheme } = useTheme()
         </nav>
         <button
           type="button"
-          class="shrink-0 rounded-full p-2 text-white/85 transition-colors hover:bg-white/15 hover:text-white"
+          class="shrink-0 rounded-full p-2 text-white transition-colors hover:bg-white/15"
           :aria-label="`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`"
           @click="toggleTheme"
         >
