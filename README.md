@@ -19,9 +19,11 @@ No configuration is required — the app ships with TheSportsDB's public test ke
 
 - Fetches all leagues and displays `strLeague`, `strSport`, and `strLeagueAlternate` (when the API provides it)
 - Debounced search by league name (also matches the alternate name)
-- Sport dropdown, derived from the actual data rather than hardcoded
-- Clicking a league expands the card in place and loads a season badge via the Season Badge API
-- Every API response is cached (see below) — repeat clicks and reloads fire no duplicate requests
+- Sport dropdown, derived from the actual data rather than hardcoded, plus a country dropdown (countries are backfilled from `lookupleague.php` when the league list is small enough, since `all_leagues` has no country field)
+- Clicking a league expands the card in place: a **season badge browser** (prev/next through every season the Badge API returns — one cached request), plus league details from `lookupleague.php` — description (`strDescriptionEN`), country, year formed, current season, and website
+- Every API response is cached (see below) — repeat clicks and reloads fire no duplicate requests; hovering a row **prefetches** its badge and details so expansion feels instant
+- **Filters sync to the URL** (`?q=…&sport=…&country=…`) so filtered views are shareable and survive reloads
+- Badges load via TheSportsDB's `/small` variant (250px) instead of full-size images
 - Responsive layout, light theme by default (matching SportyTV) with a dark-mode toggle, loading skeletons, and explicit empty/error states with retry
 - Sport tabs in the header (SportyTV-style) drive the same filter state as the required dropdown
 
@@ -40,17 +42,19 @@ src/
 │   └── sportsDb.ts         endpoint wrappers (key from env, defaults to test key)
 ├── composables/
 │   ├── useCachedFetch.ts   response cache: memory Map + sessionStorage TTL + in-flight dedup
+│   ├── useUrlFilters.ts    two-way sync between filter state and the URL query string
 │   └── useTheme.ts         dark/light toggle, persisted to localStorage
 ├── stores/
-│   └── leagues.ts          Pinia store: leagues, search term, sport filter, demo mode
+│   └── leagues.ts          Pinia store: leagues, search/sport/country filters, demo mode,
+│                           country backfill via lookupleague
 ├── components/
-│   ├── AppHeader.vue       logo + theme toggle
-│   ├── FilterToolbar.vue   search + sport dropdown + result count
+│   ├── AppHeader.vue       red app bar: logo, sport tabs, theme toggle; subnav with count
+│   ├── FilterToolbar.vue   search + sport and country dropdowns
 │   ├── SearchBar.vue       debounced text input
-│   ├── SportFilter.vue     dropdown fed by the store's derived sport list
-│   ├── LeagueList.vue      grid, skeletons, empty and error states
-│   ├── LeagueCard.vue      league row; expands inline to reveal the badge
-│   ├── SeasonBadge.vue     cached badge lookup with loading/empty/error states
+│   ├── FilterSelect.vue    generic dropdown used for both sport and country
+│   ├── LeagueList.vue      panel with divided rows, skeletons, empty and error states
+│   ├── LeagueCard.vue      league row; prefetches on hover, expands inline
+│   ├── LeagueExpansion.vue season badge browser + league description/details
 │   └── DemoDataNotice.vue  free-tier notice + demo dataset toggle
 └── data/
     └── leagues.fallback.json  real league records harvested from the API
@@ -64,7 +68,7 @@ The brief asks for cached responses, so the cache is written by hand rather than
 2. **`sessionStorage` with a 1-hour TTL** — survives page reloads, expires stale data
 3. **In-flight request dedup** — concurrent requests for the same key share one promise, so double-clicking a league fires a single fetch
 
-Both the league list and each badge lookup go through it. Failures are never cached, so a retry genuinely retries.
+The league list, each badge lookup, and each league-details lookup all go through it. Failures are never cached, so a retry genuinely retries. Hovering a league row warms its caches ahead of the click, and the season browser navigates entirely within one already-cached response.
 
 ## Tech choices, argued
 

@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import { useLeaguesStore } from './stores/leagues'
 import { useTheme } from './composables/useTheme'
+import { useUrlFilters } from './composables/useUrlFilters'
 import AppHeader from './components/AppHeader.vue'
 import FilterToolbar from './components/FilterToolbar.vue'
 import DemoDataNotice from './components/DemoDataNotice.vue'
@@ -9,6 +10,8 @@ import LeagueList from './components/LeagueList.vue'
 
 const store = useLeaguesStore()
 const { initTheme } = useTheme()
+
+useUrlFilters()
 
 onMounted(() => {
   initTheme()

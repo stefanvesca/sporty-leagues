@@ -1,12 +1,16 @@
 import { computed, ref, shallowRef } from 'vue'
 import { defineStore } from 'pinia'
-import { fetchAllLeagues } from '../api/sportsDb'
+import { fetchAllLeagues, fetchLeagueDetails } from '../api/sportsDb'
 import type { League } from '../api/types'
 
 export type LoadStatus = 'idle' | 'loading' | 'ready' | 'error'
 
 // Below this count we assume the free-tier cap kicked in and offer demo data.
 const FREE_TIER_CAP = 5
+
+// all_leagues has no country field; when the list is this small it's cheap
+// to backfill each league from lookupleague so the country filter works live.
+const ENRICH_MAX = 10
 
 export const useLeaguesStore = defineStore('leagues', () => {
   const leagues = shallowRef<League[]>([])
@@ -15,16 +19,24 @@ export const useLeaguesStore = defineStore('leagues', () => {
 
   const searchTerm = ref('')
   const selectedSport = ref('')
+  const selectedCountry = ref('')
   const demoMode = ref(false)
 
   const availableSports = computed(() =>
     [...new Set(leagues.value.map((league) => league.strSport))].sort(),
   )
 
+  const availableCountries = computed(() =>
+    [...new Set(leagues.value.map((l) => l.strCountry).filter((c): c is string => !!c))].sort(),
+  )
+
   const filteredLeagues = computed(() => {
     const query = searchTerm.value.trim().toLowerCase()
     return leagues.value.filter((league) => {
       if (selectedSport.value && league.strSport !== selectedSport.value) {
+        return false
+      }
+      if (selectedCountry.value && league.strCountry !== selectedCountry.value) {
         return false
       }
       if (!query) return true
@@ -40,6 +52,27 @@ export const useLeaguesStore = defineStore('leagues', () => {
     () => !demoMode.value && status.value === 'ready' && leagues.value.length <= FREE_TIER_CAP,
   )
 
+  async function enrichCountries(): Promise<void> {
+    const current = leagues.value
+    if (!current.length || current.length > ENRICH_MAX) return
+    if (current.every((l) => l.strCountry)) return
+    const enriched = await Promise.all(
+      current.map(async (league) => {
+        if (league.strCountry) return league
+        try {
+          const details = await fetchLeagueDetails(league.idLeague)
+          return { ...league, strCountry: details?.strCountry ?? null }
+        } catch {
+          return league
+        }
+      }),
+    )
+    // Only apply if the list hasn't been swapped (e.g. demo mode) meanwhile.
+    if (leagues.value === current) {
+      leagues.value = enriched
+    }
+  }
+
   async function loadLeagues(): Promise<void> {
     status.value = 'loading'
     error.value = null
@@ -47,6 +80,7 @@ export const useLeaguesStore = defineStore('leagues', () => {
       leagues.value = await fetchAllLeagues()
       demoMode.value = false
       status.value = 'ready'
+      void enrichCountries()
     } catch (cause) {
       error.value = cause instanceof Error ? cause.message : 'Unknown error'
       status.value = 'error'
@@ -65,6 +99,7 @@ export const useLeaguesStore = defineStore('leagues', () => {
   function clearFilters(): void {
     searchTerm.value = ''
     selectedSport.value = ''
+    selectedCountry.value = ''
   }
 
   return {
@@ -73,12 +108,15 @@ export const useLeaguesStore = defineStore('leagues', () => {
     error,
     searchTerm,
     selectedSport,
+    selectedCountry,
     demoMode,
     availableSports,
+    availableCountries,
     filteredLeagues,
     freeTierLimited,
     loadLeagues,
     loadDemoData,
+    enrichCountries,
     clearFilters,
   }
 })

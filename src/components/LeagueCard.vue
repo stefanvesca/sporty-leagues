@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { prefetchLeague } from '../api/sportsDb'
 import type { League } from '../api/types'
-import SeasonBadge from './SeasonBadge.vue'
+import LeagueExpansion from './LeagueExpansion.vue'
 
-defineProps<{
+const props = defineProps<{
   league: League
   expanded: boolean
 }>()
@@ -10,6 +11,13 @@ defineProps<{
 defineEmits<{
   toggle: []
 }>()
+
+let prefetched = false
+function prefetch(): void {
+  if (prefetched) return
+  prefetched = true
+  prefetchLeague(props.league.idLeague)
+}
 </script>
 
 <template>
@@ -19,6 +27,8 @@ defineEmits<{
       class="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-raised"
       :aria-expanded="expanded"
       @click="$emit('toggle')"
+      @mouseenter="prefetch"
+      @focusin="prefetch"
     >
       <!-- Signature red rule: appears on hover, locks in when expanded -->
       <span
@@ -50,7 +60,7 @@ defineEmits<{
       </svg>
     </button>
 
-    <SeasonBadge
+    <LeagueExpansion
       v-if="expanded"
       :league-id="league.idLeague"
       :league-name="league.strLeague"

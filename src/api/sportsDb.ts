@@ -2,6 +2,8 @@ import { cachedFetch } from '../composables/useCachedFetch'
 import type {
   AllLeaguesResponse,
   League,
+  LeagueDetails,
+  LookupLeagueResponse,
   SearchAllSeasonsResponse,
   SeasonBadge,
 } from './types'
@@ -26,6 +28,15 @@ export function fetchAllLeagues(): Promise<League[]> {
   })
 }
 
+export function fetchLeagueDetails(leagueId: string): Promise<LeagueDetails | null> {
+  return cachedFetch(`league:${leagueId}`, async () => {
+    const data = await getJson<LookupLeagueResponse>(
+      `${BASE_URL}/lookupleague.php?id=${encodeURIComponent(leagueId)}`,
+    )
+    return data.leagues?.[0] ?? null
+  })
+}
+
 export function fetchSeasonBadges(leagueId: string): Promise<SeasonBadge[]> {
   return cachedFetch(`badges:${leagueId}`, async () => {
     const data = await getJson<SearchAllSeasonsResponse>(
@@ -33,4 +44,10 @@ export function fetchSeasonBadges(leagueId: string): Promise<SeasonBadge[]> {
     )
     return data.seasons ?? []
   })
+}
+
+/** Warm the caches for a league so expanding its card feels instant. */
+export function prefetchLeague(leagueId: string): void {
+  fetchSeasonBadges(leagueId).catch(() => {})
+  fetchLeagueDetails(leagueId).catch(() => {})
 }
